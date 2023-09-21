@@ -1,0 +1,47 @@
+<!--
+  ~ The copyright of this file belongs to Feedzai. The file cannot be
+  ~ reproduced in whole or in part, stored in a retrieval system,
+  ~ transmitted in any form, or by any means electronic, mechanical,
+  ~ photocopying, or otherwise, without the prior permission of the owner.
+  ~
+  ~ © 2023 Feedzai, Strictly Confidential
+  -->
+
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>feedzails</artifactId>
+        <groupId>com.feedzai.ls</groupId>
+        <version>0.0.0-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>language-server</artifactId>
+    <packaging>jar</packaging>
+    <properties>
+        <jackson.version>2.16.0</jackson.version>
+        <json-path.version>2.8.0</json-path.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jsonSchema</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>${json-path.version}</version>
+        </dependency>
+    </dependencies>
+</project>
