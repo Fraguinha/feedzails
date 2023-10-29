@@ -9,6 +9,7 @@
 
 package com.feedzai.ls.languageserver;
 
+import com.feedzai.ls.languageserver.services.JsonPatcherService;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.InitializeParams;
@@ -37,9 +38,13 @@ public final class FeedzaiLanguageServer implements LanguageServer, LanguageClie
   /** The error code. */
   private int errorCode = 1;
 
-  /** Constructor. */
-  public FeedzaiLanguageServer() {
-    this.textDocumentService = new FeedzaiTextDocumentService();
+  /**
+   * Constructor.
+   *
+   * @param jsonPatcherService The JSON patcher service.
+   */
+  public FeedzaiLanguageServer(JsonPatcherService jsonPatcherService) {
+    this.textDocumentService = new FeedzaiTextDocumentService(jsonPatcherService);
     this.workspaceService = new FeedzaiWorkspaceService();
   }
 

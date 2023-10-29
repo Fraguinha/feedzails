@@ -9,6 +9,7 @@
 
 package com.feedzai.ls.languageserver;
 
+import com.feedzai.ls.languageserver.services.JsonPatcherService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -18,7 +19,6 @@ import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
-import org.eclipse.lsp4j.CompletionItemKind;
 import org.eclipse.lsp4j.CompletionList;
 import org.eclipse.lsp4j.CompletionParams;
 import org.eclipse.lsp4j.DefinitionParams;
@@ -53,6 +53,13 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
  */
 public final class FeedzaiTextDocumentService
     implements org.eclipse.lsp4j.services.TextDocumentService {
+  /** The JSON patcher service. */
+  final JsonPatcherService jsonPatcherService;
+
+  public FeedzaiTextDocumentService(JsonPatcherService jsonPatcherService) {
+    this.jsonPatcherService = jsonPatcherService;
+  }
+
   @Override
   public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
       final CompletionParams completionParams) {
@@ -60,14 +67,9 @@ public final class FeedzaiTextDocumentService
         () -> {
           final List<CompletionItem> completionItems = new ArrayList<>();
 
-          CompletionItem completionItem = new CompletionItem();
-
-          completionItem.setKind(CompletionItemKind.Snippet);
-          completionItem.setLabel("feedzaiHello()");
-          completionItem.setDetail("feedzaiHello()\n  this will say hello to feedzai");
-          completionItem.setInsertText("System.out.println(\"hello feedzai\");");
-
-          completionItems.add(completionItem);
+          if (completionParams.getTextDocument().getUri().endsWith(".json")) {
+            completionItems.addAll(this.jsonPatcherService.getJsonPatcherCompletionItems());
+          }
 
           return Either.forLeft(completionItems);
         });

@@ -10,6 +10,8 @@
 package com.feedzai.ls.launcher;
 
 import com.feedzai.ls.languageserver.FeedzaiLanguageServer;
+import com.feedzai.ls.languageserver.services.JsonPatcherService;
+import com.feedzai.ls.languageserver.services.MavenService;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutionException;
@@ -28,6 +30,9 @@ import org.eclipse.lsp4j.services.LanguageClient;
 public final class StdioLauncher {
   /** Constructor. */
   private StdioLauncher() {}
+
+  /** The cache path. */
+  static final String CACHE_PATH = System.getProperty("user.home") + "/.cache/feedzails/";
 
   /**
    * Main method.
@@ -54,7 +59,11 @@ public final class StdioLauncher {
    */
   private static void startServer(final InputStream in, final OutputStream out)
       throws ExecutionException, InterruptedException {
-    FeedzaiLanguageServer feedzaiLanguageServer = new FeedzaiLanguageServer();
+    FeedzaiLanguageServer feedzaiLanguageServer =
+        new FeedzaiLanguageServer(
+            new JsonPatcherService(
+                new MavenService("pom.xml").readProperty("json-patcher-maven-plugin.version"),
+                CACHE_PATH + "json-patcher/"));
 
     Launcher<LanguageClient> launcher =
         LSPLauncher.createServerLauncher(feedzaiLanguageServer, in, out);
