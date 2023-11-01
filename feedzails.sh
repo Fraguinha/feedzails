@@ -18,4 +18,9 @@ if [ "$JAVA_VERSION" -lt 11 ]; then
 	exit 1
 fi
 
-"$JAVA" -jar "$(dirname "$0")"/language-server-launcher/target/language-server-launcher.jar
+if [ $# -ne 1 ]; then
+	echo "No GitLab token. Usage: $0 [gitlab-token]"
+	exit 1
+fi
+
+GITLAB_TOKEN="$1" "$JAVA" -jar "$(dirname "$0")"/language-server-launcher/target/language-server-launcher.jar

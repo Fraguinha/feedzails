@@ -21,6 +21,11 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
+# Javascript
+node_modules/
+build/
+out/
+
 # IntelliJ
 out/
 .idea/
@@ -56,6 +61,8 @@ nb-configuration.xml
 # VSCode
 .vscode/
 .code-workspace
+*.vsix
 
 # OS X
 .DS_Store
+

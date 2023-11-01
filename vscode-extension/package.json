@@ -1,0 +1,60 @@
+{
+	"name": "feedzails",
+	"description": "VSCode extension for feedzai language server",
+	"icon": "img/feedzai.png",
+	"author": "Feedzai",
+	"license": "Feedzai",
+	"version": "0.1.0",
+	"publisher": "Feedzai",
+	"repository": {
+		"type": "git",
+		"url": "https://gitlab.feedzai.com/joao.fraga/feedzails"
+	},
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"activationEvents": [
+		"workspaceContains:pom.xml"
+	],
+	"main": "./out/extension",
+	"contributes": {
+		"configuration": {
+			"title": "Feedzai Language Server Configuration",
+			"type": "object",
+			"properties": {
+				"feedzails.executable": {
+					"type": "string",
+					"default": "feedzails",
+					"description": "Language server executable"
+				},
+				"feedzails.gitlab_token": {
+					"type": "string",
+					"default": null,
+					"description": "GitLab token for gitlab.feedzai.com"
+				}
+			}
+		}
+	},
+	"scripts": {
+		"build": "tsc -p ./ && mkdir -p build && vsce package --out build/"
+	},
+	"dependencies": {
+		"vscode-languageclient": "^9.0.1",
+		"@vscode/vsce": "^2.15.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.8.9",
+		"@types/vscode": "^1.75.1",
+		"@typescript-eslint/eslint-plugin": "^6.9.1",
+		"@vscode/test-electron": "^2.2.3",
+		"eslint": "^8.52.0",
+		"eslint-config-standard-with-typescript": "^39.1.1",
+		"eslint-plugin-import": "^2.29.0",
+		"eslint-plugin-n": "^16.2.0",
+		"eslint-plugin-promise": "^6.1.1",
+		"typescript": "^5.2.2"
+	}
+}
