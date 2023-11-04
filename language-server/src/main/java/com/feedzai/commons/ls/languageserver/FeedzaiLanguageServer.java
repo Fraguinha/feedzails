@@ -7,9 +7,10 @@
  * © 2023 Feedzai, Strictly Confidential
  */
 
-package com.feedzai.ls.languageserver;
+package com.feedzai.commons.ls.languageserver;
 
-import com.feedzai.ls.languageserver.services.JsonPatcherService;
+import com.feedzai.commons.ls.languageserver.api.CompletionService;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.InitializeParams;
@@ -18,22 +19,19 @@ import org.eclipse.lsp4j.ServerCapabilities;
 import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageClientAware;
-import org.eclipse.lsp4j.services.LanguageServer;
 
 /**
  * The Feedzai Language Server.
  *
  * @since 0.1.0
  */
-public final class FeedzaiLanguageServer implements LanguageServer, LanguageClientAware {
+public final class FeedzaiLanguageServer
+    implements org.eclipse.lsp4j.services.LanguageServer, LanguageClientAware {
   /** The text document service. */
   private final org.eclipse.lsp4j.services.TextDocumentService textDocumentService;
 
   /** The workspace service. */
   private final org.eclipse.lsp4j.services.WorkspaceService workspaceService;
-
-  /** The client. */
-  private LanguageClient client;
 
   /** The error code. */
   private int errorCode = 1;
@@ -41,10 +39,10 @@ public final class FeedzaiLanguageServer implements LanguageServer, LanguageClie
   /**
    * Constructor.
    *
-   * @param jsonPatcherService The JSON patcher service.
+   * @param completionServices The completion services.
    */
-  public FeedzaiLanguageServer(JsonPatcherService jsonPatcherService) {
-    this.textDocumentService = new FeedzaiTextDocumentService(jsonPatcherService);
+  public FeedzaiLanguageServer(List<CompletionService> completionServices) {
+    this.textDocumentService = new FeedzaiTextDocumentService(completionServices);
     this.workspaceService = new FeedzaiWorkspaceService();
   }
 
@@ -81,7 +79,5 @@ public final class FeedzaiLanguageServer implements LanguageServer, LanguageClie
   }
 
   @Override
-  public void connect(final LanguageClient languageClient) {
-    this.client = languageClient;
-  }
+  public void connect(final LanguageClient languageClient) {}
 }
