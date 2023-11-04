@@ -7,13 +7,14 @@
  * © 2023 Feedzai, Strictly Confidential
  */
 
-package com.feedzai.ls.launcher;
+package com.feedzai.commons.ls.launcher;
 
-import com.feedzai.ls.languageserver.FeedzaiLanguageServer;
-import com.feedzai.ls.languageserver.services.JsonPatcherService;
-import com.feedzai.ls.languageserver.services.MavenService;
+import com.feedzai.commons.ls.languageserver.FeedzaiLanguageServer;
+import com.feedzai.commons.ls.languageserver.api.CompletionService;
+import com.feedzai.commons.ls.languageserver.impl.services.completion.JsonPatcherService;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
@@ -32,7 +33,10 @@ public final class StdioLauncher {
   private StdioLauncher() {}
 
   /** The cache path. */
-  static final String CACHE_PATH = System.getProperty("user.home") + "/.cache/feedzails/";
+  private static final String CACHE_PATH = System.getProperty("user.home") + "/.cache/feedzails/";
+
+  /** The json patcher cache path. */
+  private static final String JSON_PATCHER_CACHE_PATH = CACHE_PATH + "json-patcher/";
 
   /**
    * Main method.
@@ -59,13 +63,13 @@ public final class StdioLauncher {
    */
   private static void startServer(final InputStream in, final OutputStream out)
       throws ExecutionException, InterruptedException {
-    FeedzaiLanguageServer feedzaiLanguageServer =
-        new FeedzaiLanguageServer(
-            new JsonPatcherService(
-                new MavenService("pom.xml").readProperty("json-patcher-maven-plugin.version"),
-                CACHE_PATH + "json-patcher/"));
+    final List<CompletionService> completionServices =
+        List.of(new JsonPatcherService(JSON_PATCHER_CACHE_PATH));
 
-    Launcher<LanguageClient> launcher =
+    final FeedzaiLanguageServer feedzaiLanguageServer =
+        new FeedzaiLanguageServer(completionServices);
+
+    final Launcher<LanguageClient> launcher =
         LSPLauncher.createServerLauncher(feedzaiLanguageServer, in, out);
 
     feedzaiLanguageServer.connect(launcher.getRemoteProxy());

@@ -7,7 +7,7 @@
  * © 2023 Feedzai, Strictly Confidential
  */
 
-package com.feedzai.ls.languageserver;
+package com.feedzai.commons.ls.languageserver;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

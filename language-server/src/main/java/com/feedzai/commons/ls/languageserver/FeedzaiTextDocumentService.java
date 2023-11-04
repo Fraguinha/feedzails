@@ -7,9 +7,9 @@
  * © 2023 Feedzai, Strictly Confidential
  */
 
-package com.feedzai.ls.languageserver;
+package com.feedzai.commons.ls.languageserver;
 
-import com.feedzai.ls.languageserver.services.JsonPatcherService;
+import com.feedzai.commons.ls.languageserver.api.CompletionService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -54,10 +54,15 @@ import org.eclipse.lsp4j.jsonrpc.messages.Either;
 public final class FeedzaiTextDocumentService
     implements org.eclipse.lsp4j.services.TextDocumentService {
   /** The JSON patcher service. */
-  final JsonPatcherService jsonPatcherService;
+  final List<CompletionService> completionServices;
 
-  public FeedzaiTextDocumentService(JsonPatcherService jsonPatcherService) {
-    this.jsonPatcherService = jsonPatcherService;
+  /**
+   * Constructor.
+   *
+   * @param completionServices The completion services.
+   */
+  public FeedzaiTextDocumentService(List<CompletionService> completionServices) {
+    this.completionServices = completionServices;
   }
 
   @Override
@@ -67,9 +72,16 @@ public final class FeedzaiTextDocumentService
         () -> {
           final List<CompletionItem> completionItems = new ArrayList<>();
 
-          if (completionParams.getTextDocument().getUri().endsWith(".json")) {
-            completionItems.addAll(this.jsonPatcherService.getJsonPatcherCompletionItems());
-          }
+          this.completionServices.stream()
+              .filter(
+                  completionService ->
+                      completionService.getAssociatedFileExtensions().stream()
+                          .anyMatch(
+                              extension ->
+                                  completionParams.getTextDocument().getUri().endsWith(extension)))
+              .forEach(
+                  completionService ->
+                      completionItems.addAll(completionService.getCompletionItems()));
 
           return Either.forLeft(completionItems);
         });

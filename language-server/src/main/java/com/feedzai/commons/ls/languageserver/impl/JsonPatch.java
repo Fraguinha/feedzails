@@ -7,7 +7,7 @@
  * © 2023 Feedzai, Strictly Confidential
  */
 
-package com.feedzai.ls.languageserver.services;
+package com.feedzai.commons.ls.languageserver.impl;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @since 0.1.0
  */
-public class Patch {
+public class JsonPatch {
   /** patch name. */
   private final String name;
 
@@ -24,7 +24,7 @@ public class Patch {
   private final List<String> fields;
 
   /** Constructor. */
-  public Patch(String name, List<String> fields) {
+  public JsonPatch(String name, List<String> fields) {
     this.name = name;
     this.fields = fields;
   }
